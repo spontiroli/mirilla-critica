@@ -35,19 +35,22 @@ def send_welcome(message):
 @bot.message_handler(commands=["film"])
 def buscar(message):
     bot.send_message(message.chat.id, 
-                     "\U0001f916 Buscando... " + message.text[5:])
+                     "\N{ROBOT FACE} Buscando... " + message.text[5:])
     ia = imdb.IMDb()
     items = ia.search_movie(message.text.lower()[5:])
-    bot.send_message(message.chat.id, 
-                     str(items))
+
+    # DEBUG
+    # bot.send_message(message.chat.id, 
+    #                  str(items))
+    # MOVIE CAMERA - TELEVISION - CINEMA
+
     parsed_results = ""
 
     for i in items:
-        # TODO veificar si algún campo es vacío (arroja error)
-        title = i['title']
-        year = str(i['year'])
+        title = str(i.get('title','N/A'))
+        year = str(i.get('year','N/A'))
         id = str(i.getID())
-        parsed_results += f"{title} {year} - [{id}](https://www.imdb.com/title/tt{id}/) \n"
+        parsed_results += f"\N{CINEMA} {title} ({year}) - [{id}](https://www.imdb.com/title/tt{id}/) \n"
 
     bot.send_message(
         message.chat.id, parsed_results, parse_mode = "Markdown", disable_web_page_preview = True
